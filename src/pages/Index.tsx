@@ -1,14 +1,30 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import Hero from "@/components/Hero";
+import ChatInterface from "@/components/ChatInterface";
+import VolunteerCards from "@/components/VolunteerCards";
+
+type Section = "home" | "chat" | "volunteers";
 
 const Index = () => {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4 color-black text-black">Добро пожаловать!</h1>
-        <p className="text-xl text-gray-600">тут будет отображаться ваш проект</p>
-      </div>
-    </div>
-  );
+  const [currentSection, setCurrentSection] = useState<Section>("home");
+
+  const navigateToSection = (section: "chat" | "volunteers") => {
+    setCurrentSection(section);
+  };
+
+  const navigateToHome = () => {
+    setCurrentSection("home");
+  };
+
+  if (currentSection === "chat") {
+    return <ChatInterface onBack={navigateToHome} />;
+  }
+
+  if (currentSection === "volunteers") {
+    return <VolunteerCards onBack={navigateToHome} />;
+  }
+
+  return <Hero onNavigate={navigateToSection} />;
 };
 
 export default Index;
