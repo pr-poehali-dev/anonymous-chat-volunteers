@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
+import VolunteerProfile from "@/components/VolunteerProfile";
 
 interface Volunteer {
   id: string;
@@ -12,6 +14,13 @@ interface Volunteer {
   available: boolean;
   avatar: string;
   description: string;
+  education: string;
+  workingHours: string;
+  successfulSessions: number;
+  rating: number;
+  specialties: string[];
+  aboutMe: string;
+  approach: string;
 }
 
 interface VolunteerCardsProps {
@@ -19,6 +28,11 @@ interface VolunteerCardsProps {
 }
 
 const VolunteerCards = ({ onBack }: VolunteerCardsProps) => {
+  const [selectedVolunteer, setSelectedVolunteer] = useState<Volunteer | null>(
+    null,
+  );
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+
   const volunteers: Volunteer[] = [
     {
       id: "1",
@@ -31,6 +45,15 @@ const VolunteerCards = ({ onBack }: VolunteerCardsProps) => {
         "https://images.unsplash.com/photo-1494790108755-2616b612b5bc?w=150&h=150&fit=crop&crop=face",
       description:
         "Специализируюсь на работе с тревожными расстройствами и стрессом",
+      education: "МГУ, факультет психологии",
+      workingHours: "Пн-Пт 9:00-18:00",
+      successfulSessions: 342,
+      rating: 4.9,
+      specialties: ["Тревожность", "Стресс", "Панические атаки", "Самооценка"],
+      aboutMe:
+        "Я психолог с пятилетним опытом работы в области кризисной психологии. Помогаю людям справиться с тревожностью, стрессом и найти внутренние ресурсы для преодоления трудных жизненных ситуаций.",
+      approach:
+        "В работе использую когнитивно-поведенческую терапию и техники майндфулнес. Создаю безопасное пространство для открытого диалога и поддерживаю клиентов на пути к эмоциональному благополучию.",
     },
     {
       id: "2",
@@ -42,6 +65,15 @@ const VolunteerCards = ({ onBack }: VolunteerCardsProps) => {
       avatar:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
       description: "Помогаю людям в кризисных ситуациях, работаю с депрессией",
+      education: "СПбГУ, клиническая психология",
+      workingHours: "Ежедневно 10:00-22:00",
+      successfulSessions: 567,
+      rating: 4.8,
+      specialties: ["Депрессия", "Кризисы", "Суицидальные мысли", "Потери"],
+      aboutMe:
+        "Специализируюсь на кризисном консультировании и работе с депрессивными расстройствами. Имею сертификат кризисного психолога и опыт работы на телефоне доверия.",
+      approach:
+        "Использую экзистенциальный подход и техники поддерживающей терапии. Помогаю найти смысл в трудных ситуациях и восстановить веру в себя.",
     },
     {
       id: "3",
@@ -54,6 +86,20 @@ const VolunteerCards = ({ onBack }: VolunteerCardsProps) => {
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
       description:
         "Работаю с семейными проблемами и межличностными отношениями",
+      education: "МГППУ, семейная психология",
+      workingHours: "Вт, Чт, Сб 14:00-20:00",
+      successfulSessions: 289,
+      rating: 4.7,
+      specialties: [
+        "Семейные конфликты",
+        "Отношения",
+        "Развод",
+        "Воспитание детей",
+      ],
+      aboutMe:
+        "Семейный психолог с опытом работы с парами и семьями. Помогаю восстановить доверие, улучшить коммуникацию и найти компромиссы в отношениях.",
+      approach:
+        "Применяю системную семейную терапию и техники эмоционально-фокусированной терапии. Работаю как с парами, так и с отдельными членами семьи.",
     },
     {
       id: "4",
@@ -65,8 +111,31 @@ const VolunteerCards = ({ onBack }: VolunteerCardsProps) => {
       avatar:
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       description: "Специализируюсь на работе с подростками и молодёжью",
+      education: "РГПУ им. Герцена, возрастная психология",
+      workingHours: "Пн, Ср, Пт 15:00-19:00",
+      successfulSessions: 156,
+      rating: 4.6,
+      specialties: [
+        "Подростковые кризисы",
+        "Самоидентификация",
+        "Буллинг",
+        "Учебный стресс",
+      ],
+      aboutMe:
+        "Работаю с подростками и молодыми людьми, помогаю справиться с возрастными кризисами, проблемами самоидентификации и социальной адаптации.",
+      approach:
+        "Использую игровую терапию, арт-терапию и когнитивно-поведенческие техники, адаптированные для работы с молодёжью.",
     },
   ];
+
+  const handleViewProfile = (volunteer: Volunteer) => {
+    setSelectedVolunteer(volunteer);
+    setIsProfileOpen(true);
+  };
+
+  const handleSelectVolunteer = (volunteer: Volunteer) => {
+    alert(`Вы выбрали волонтёра: ${volunteer.name}. Скоро с вами свяжутся!`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -149,7 +218,16 @@ const VolunteerCards = ({ onBack }: VolunteerCardsProps) => {
               </div>
 
               <Button
-                className={`w-full ${
+                className="w-full"
+                variant="outline"
+                onClick={() => handleViewProfile(volunteer)}
+              >
+                <Icon name="User" size={16} className="mr-2" />
+                Посмотреть анкету
+              </Button>
+
+              <Button
+                className={`w-full mt-2 ${
                   volunteer.available
                     ? "bg-green-600 hover:bg-green-700 text-white"
                     : "bg-gray-200 text-gray-500 cursor-not-allowed"
@@ -162,6 +240,13 @@ const VolunteerCards = ({ onBack }: VolunteerCardsProps) => {
             </Card>
           ))}
         </div>
+
+        <VolunteerProfile
+          volunteer={selectedVolunteer}
+          isOpen={isProfileOpen}
+          onClose={() => setIsProfileOpen(false)}
+          onSelect={handleSelectVolunteer}
+        />
 
         <div className="mt-8 text-center">
           <Card className="p-6 bg-purple-50 border-purple-200">
